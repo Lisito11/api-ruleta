@@ -4,13 +4,7 @@ using ApiRuleta.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-if (builder.Environment.IsDevelopment())
-{
-    builder.Services.ConfigureSqlServerContext(builder.Configuration);
-}
-
-builder.Services.ConfigurePostgresContext(builder.Configuration);
-
+builder.Services.ConfigureContext(builder.Configuration);
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
