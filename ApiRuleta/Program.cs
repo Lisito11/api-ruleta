@@ -4,8 +4,13 @@ using ApiRuleta.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.ConfigureSqlServerContext(builder.Configuration);
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.ConfigureSqlServerContext(builder.Configuration);
+}
+
+builder.Services.ConfigurePostgresContext(builder.Configuration);
+
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
@@ -14,6 +19,10 @@ builder.Services.AddScoped<IRuletaService, RuletaService>();
 //Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+builder.Services.AddCors(c =>
+{
+    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -28,6 +37,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowOrigin");
 
 app.UseAuthorization();
 
