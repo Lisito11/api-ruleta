@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace ApiRuleta.Helpers
 {
@@ -8,14 +9,14 @@ namespace ApiRuleta.Helpers
 	{
         public static void ConfigureSqlServerContext(this IServiceCollection services, IConfiguration config)
         {
-            var connectionString = config["Connection:RuletaDB"];
+            var connectionString = config.GetConnectionString("RuletaDB");
             services.AddDbContext<RuletaDBContext>(options => options.UseSqlServer(connectionString));
         }
 
         public static void ConfigurePostgresContext(this IServiceCollection services, IConfiguration config)
         {
-            var connectionString = config["Connection:RuletaDB"];
-            var conStrBuilder = new SqlConnectionStringBuilder(connectionString);
+            var connectionString = config.GetConnectionString("RuletaDB");
+            var conStrBuilder = new NpgsqlConnectionStringBuilder(connectionString);
             conStrBuilder.Password = config["Password"];
             var connection = conStrBuilder.ConnectionString;
 
